@@ -55,7 +55,6 @@ class Tools:
 
 
 	# Малювати лінію
-	opacity = lambda transparency: (int(255 * (transparency/100.)),)
 	def draw_transparent_line(self, image, xy, color, width=1, joint=None) -> None:
 	    if len(color) < 4:
 	        color += opacity(100)
@@ -82,7 +81,7 @@ class Tools:
 
 
 tools = Tools()
-
+opacity = lambda transparency: (int(255 * (transparency/100.)),)
 
 global spotify
 spotify: dict = {}
