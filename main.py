@@ -80,8 +80,9 @@ class Tools:
 	    gradient_image.save(path)
 
 
-tools = Tools()
 opacity = lambda transparency: (int(255 * (transparency/100.)),)
+tools = Tools()
+
 
 global spotify
 spotify: dict = {}
@@ -121,14 +122,14 @@ async def spotify_(ctx, *, member: disnake.Member=None):
 	tools.download_image_from_url(spotify["album_cover_url"], filepath=configuration["output"] + "icon.png")
 	color = ColorThief(configuration["output"] + "icon.png").get_color(quality=1) # Основний колір зображення
 
-	scale = (450, 250, )
+	scale = (450, 150,)
 	image = Image.new("RGBA", scale, color)
 	draw = ImageDraw.Draw(image)
 
 	tools.impose_a_transparency(configuration["output"] + "icon.png", color, 3)
 	icon = Image.open(configuration["output"] + "icon.png")
-	icon = icon.resize((250, 250))
-	image.paste(icon, (scale[0]-250, 0))
+	icon = icon.resize((scale[1], scale[1]))
+	image.paste(icon, (scale[0]-scale[1], 0))
 
 	tools.draw_text(draw,
 		xy=(16, 15),
@@ -149,19 +150,19 @@ async def spotify_(ctx, *, member: disnake.Member=None):
 	) # Артисти
 
 	tools.draw_transparent_line(image,
-		xy=[(10, 210), (440, 210)],
+		xy=[(10, scale[1]-45), (440, scale[1]-45)],
 		color=(255, 255, 255)+opacity(50),
 		width=4
 	) # Перша лінія (транспарент)
 
 	tools.draw_text(draw,
-		xy=(20, 217),
+		xy=(20, scale[1]-33),
 		text=seconds,
 		size=10
 	) # Таймер пінсі (скільки часу вже пройшло)
 
 	tools.draw_text(draw,
-		xy=(400, 217),
+		xy=(400, scale[1]-33),
 		text=end,
 		size=10
 	) # Тривалість пісні
@@ -173,13 +174,13 @@ async def spotify_(ctx, *, member: disnake.Member=None):
 	pixeles = (450/100)*round(bar)
 
 	tools.draw_transparent_line(image,
-		xy=[(10, 210), (pixeles, 210)],
+		xy=[(10, scale[1]-45), (pixeles, scale[1]-45)],
 		color=(255, 255, 255)+opacity(85),
 		width=4
 	) # Друга лінія
 
 	draw.ellipse(
-		xy=[(pixeles, 205), (pixeles+10, 205+10)],
+		xy=[(pixeles, scale[1]-50), (pixeles+10, (scale[1]-50)+10)],
 		fill=(255, 255, 255)
 	) # Еліпс
 
