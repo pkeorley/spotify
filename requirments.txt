@@ -1,0 +1,5 @@
+requests
+disnake
+transliterate
+pillow
+colorthief
