@@ -2,6 +2,7 @@ import time
 from io import BytesIO
 
 import disnake
+import requests
 from disnake.ext import commands
 from PIL import Image, ImageDraw
 from colorthief import ColorThief
@@ -40,16 +41,15 @@ class Spotify(commands.Cog):
             seconds = str(self.tools.convert_to_datetime_minute(round(time.time())-self.tools.convert_to_int(self.spotify.get("start"))))[2:]
             end = str(self.spotify.get("duration")).split(".")[0][2:]
 
-            self.tools.download_image_from_url(self.spotify.get("album_cover_url"), filepath=configuration.get("output") + "icon.png")
-            color = ColorThief(configuration.get("output") + "icon.png").get_color(quality=1) # Основний колір зображення
+            icon = BytesIO(requests.get(self.spotify.get("album_cover_url")).content)
+            color = ColorThief(icon).get_color(quality=1) # Основний колір зображення
             fill = self.tools.choice_color_text_data(color)
 
             scale = (450, 150,)
             image = Image.new("RGBA", scale, color)
             draw = ImageDraw.Draw(image)
 
-            self.tools.impose_a_transparency(configuration.get("output") + "icon.png", color, 3)
-            icon = Image.open(configuration.get("output") + "icon.png")
+            icon = Image.open(self.tools.impose_a_transparency(icon, color, 3))
             icon = icon.resize((scale[1], scale[1]))
             image.paste(icon, (scale[0]-scale[1], 0))
 
@@ -111,8 +111,8 @@ class Spotify(commands.Cog):
                 fill=(255, 255, 255)
             ) # Еліпс
 
-            image.save(configuration.get("output") + "spotify.png")
-            await ctx.reply(file=disnake.File(configuration.get("output") + "spotify.png"))
+            image.save("spotify.png")
+            await ctx.reply(file=disnake.File("spotify.png"))
 
         
 def setup(bot):

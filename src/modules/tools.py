@@ -32,6 +32,10 @@ class Tools:
         return int(arg.split(":")[0])*60+int(arg.split(":")[1])
 
 
+    def convert_url_to_disnake_file(url: str) -> disnake.File:
+        return disnake.File(BytesIO(requests.get(url).content), filename=f"photo.png")
+
+
     # Скачати світлину маючи тільки лінк на це зображення
     def download_image_from_url(self, url: str, filepath="photo.png") -> None:
         image = Image.open(BytesIO(requests.get(url).content))
@@ -83,7 +87,9 @@ class Tools:
         black_image = Image.new('RGBA', (width, height), color=color)
         black_image.putalpha(alpha)
         gradient_image = Image.alpha_composite(image, black_image)
-        gradient_image.save(path)
+        bytesio = BytesIO()
+        gradient_image.save(bytesio, "PNG")
+        return bytesio
 
 
 opacity = lambda transparency: (int(255 * (transparency/100.)),)
