@@ -91,7 +91,7 @@ spotify: dict = {}
 @bot.command(name="spotify")
 async def spotify_(ctx, *, member: disnake.Member=None):
 	member = member or ctx.author
-	if member.activities:
+	if disnake.Spotify in member.activities:
 		for activity in member.activities:
 			if isinstance(activity, disnake.Spotify):
 				spotify: dict = {
