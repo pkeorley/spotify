@@ -1,9 +1,5 @@
 import os
-import time
-import datetime
-from io import BytesIO
 
-import requests
 import disnake
 from disnake.ext import commands
 
